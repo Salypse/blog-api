@@ -13,6 +13,7 @@ app.use(cookieParser());
 
 app.use("/", routes.indexRouter);
 app.use("/auth", routes.authRouter);
+app.use("/posts", routes.postsRouter);
 
 // Resource not found error
 app.use((req, res) => {
