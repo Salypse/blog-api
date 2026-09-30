@@ -26,4 +26,7 @@ postsRouter.put(
   postValidator.validatePost,
   postsController.putPost,
 );
+
+// DELETE
+postsRouter.delete("/:id", requiredAuth, isAdmin, postsController.deletePost);
 module.exports = postsRouter;

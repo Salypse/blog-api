@@ -98,4 +98,22 @@ module.exports = {
       return next(error);
     }
   },
+
+  // DELETE request functions
+  async deletePost(req, res, next) {
+    try {
+      await prisma.post.delete({
+        where: { id: Number(req.params.id) },
+      });
+
+      return res.status(204).send();
+    } catch (error) {
+      if (error.code === "P2025") {
+        return res.status(404).json({
+          error: { code: "NOT_FOUND", message: "Resource not found." },
+        });
+      }
+      return next(error);
+    }
+  },
 };
