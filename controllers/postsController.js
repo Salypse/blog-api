@@ -45,12 +45,6 @@ module.exports = {
     try {
       const user = req.user;
 
-      if (!user.isAdmin) {
-        return res.status(403).json({
-          error: { code: "FORBIDDEN", message: "Admin access required." },
-        });
-      }
-
       const post = await prisma.post.create({
         data: {
           header: req.body.postHeader,

@@ -1,7 +1,7 @@
 const express = require("express");
 const postsRouter = express.Router();
 const postsController = require("../controllers/postsController");
-const { optionalAuth, requiredAuth } = require("../middleware/auth");
+const { optionalAuth, requiredAuth, isAdmin } = require("../middleware/auth");
 
 const postValidator = require("../validators/postValidator");
 
@@ -13,6 +13,7 @@ postsRouter.get("/:id", optionalAuth, postsController.getPublishedPost);
 postsRouter.post(
   "/",
   requiredAuth,
+  isAdmin,
   postValidator.validatePost,
   postsController.postNewPost,
 );

@@ -47,11 +47,9 @@ module.exports = {
 
       // If user has expired token return refresh status
       if (info?.name === "TokenExpiredError") {
-        return res
-          .status(401)
-          .json({
-            error: { code: "TOKEN_EXPIRED", message: "Token expired." },
-          });
+        return res.status(401).json({
+          error: { code: "TOKEN_EXPIRED", message: "Token expired." },
+        });
       }
 
       if (!user) {
@@ -66,5 +64,17 @@ module.exports = {
       req.user = user;
       return next();
     })(req, res, next);
+  },
+
+  isAdmin(req, res, next) {
+    const user = req.user;
+
+    if (!user.isAdmin) {
+      return res.status(403).json({
+        error: { code: "FORBIDDEN", message: "Admin access required." },
+      });
+    }
+
+    next();
   },
 };
