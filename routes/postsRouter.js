@@ -18,4 +18,12 @@ postsRouter.post(
   postsController.postNewPost,
 );
 
+// PUT
+postsRouter.put(
+  "/:id",
+  requiredAuth,
+  isAdmin,
+  postValidator.validatePost,
+  postsController.putPost,
+);
 module.exports = postsRouter;

@@ -61,4 +61,41 @@ module.exports = {
       return next(error);
     }
   },
+
+  // PUT request functions
+  async putPost(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        error: { errors: errors.array() },
+      });
+    }
+
+    try {
+      const post = await prisma.post.findUnique({
+        where: { id: Number(req.params.id) },
+      });
+
+      if (!post) {
+        return res.status(404).json({
+          error: { code: "NOT_FOUND", message: "Resource not found." },
+        });
+      }
+
+      await prisma.post.update({
+        where: { id: Number(req.params.id) },
+        data: {
+          header: req.body.postHeader,
+          subHeader: req.body.postSubHeader,
+          body: req.body.postBody,
+        },
+      });
+
+      return res
+        .status(200)
+        .json({ data: { message: "Post updated successfully." } });
+    } catch (error) {
+      return next(error);
+    }
+  },
 };
