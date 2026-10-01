@@ -82,4 +82,28 @@ module.exports = {
       return next(error);
     }
   },
+
+  // DELETE request functions
+  async deleteComment(req, res, next) {
+    try {
+      const post = await prisma.post.findUniqueOrThrow({
+        where: {
+          id: Number(req.params.postId),
+          isPublished: true,
+        },
+      });
+
+      await prisma.comment.delete({
+        where: {
+          id: Number(req.params.commentId),
+          authorId: req.user.id,
+          postId: post.id,
+        },
+      });
+
+      return res.status(204).send();
+    } catch (error) {
+      return next(error);
+    }
+  },
 };

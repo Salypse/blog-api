@@ -23,4 +23,11 @@ commentsRouter.put(
   commentsController.putComment,
 );
 
+// DELETE
+commentsRouter.delete(
+  "/:commentId",
+  requiredAuth,
+  commentsController.deleteComment,
+);
+
 module.exports = commentsRouter;
