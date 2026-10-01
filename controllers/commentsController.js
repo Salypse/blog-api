@@ -8,6 +8,7 @@ module.exports = {
       const post = await prisma.post.findUniqueOrThrow({
         where: {
           id: Number(req.params.postId),
+          isPublished: true,
         },
       });
 
@@ -32,6 +33,7 @@ module.exports = {
       const post = await prisma.post.findUniqueOrThrow({
         where: {
           id: Number(req.params.postId),
+          isPublished: true,
         },
       });
 
@@ -57,11 +59,18 @@ module.exports = {
     }
 
     try {
+      const post = await prisma.post.findUniqueOrThrow({
+        where: {
+          id: Number(req.params.postId),
+          isPublished: true,
+        },
+      });
+
       await prisma.comment.update({
         where: {
           id: Number(req.params.commentId),
           authorId: req.user.id,
-          postId: Number(req.params.postId),
+          postId: post.id,
         },
         data: { message: req.body.commentMessage },
       });
