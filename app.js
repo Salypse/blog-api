@@ -30,6 +30,13 @@ app.use((err, req, res, next) => {
       error: { code: err.code || "INTERNAL_ERROR", message: err.message },
     });
   } else {
+    // Prisma not found error
+    if (err.code === "P2025") {
+      return res
+        .status(404)
+        .json({ error: { code: "NOT_FOUND", message: "Resource not found." } });
+    }
+
     console.error(err);
     return res.status(500).json({
       error: { code: "INTERNAL_ERROR", message: "Something went wrong." },

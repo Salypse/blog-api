@@ -17,15 +17,9 @@ module.exports = {
 
   async getPublishedPost(req, res, next) {
     try {
-      const post = await prisma.post.findUnique({
+      const post = await prisma.post.findUniqueOrThrow({
         where: { id: Number(req.params.id), isPublished: true },
       });
-
-      if (!post) {
-        return res.status(404).json({
-          error: { code: "NOT_FOUND", message: "Resource not found." },
-        });
-      }
 
       return res.status(200).json({ data: { post } });
     } catch (error) {
@@ -72,18 +66,10 @@ module.exports = {
     }
 
     try {
-      const post = await prisma.post.findUnique({
-        where: { id: Number(req.params.id) },
-      });
-
-      if (!post) {
-        return res.status(404).json({
-          error: { code: "NOT_FOUND", message: "Resource not found." },
-        });
-      }
+      const user = req.user;
 
       await prisma.post.update({
-        where: { id: Number(req.params.id) },
+        where: { id: Number(req.params.id), authorId: user.id },
         data: {
           header: req.body.postHeader,
           subHeader: req.body.postSubHeader,
@@ -108,11 +94,6 @@ module.exports = {
 
       return res.status(204).send();
     } catch (error) {
-      if (error.code === "P2025") {
-        return res.status(404).json({
-          error: { code: "NOT_FOUND", message: "Resource not found." },
-        });
-      }
       return next(error);
     }
   },
