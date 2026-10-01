@@ -62,4 +62,35 @@ module.exports = {
       return next(error);
     }
   },
+
+  // PUT request functions
+  async putComment(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: { errors: errors.array() } });
+    }
+
+    try {
+      await prisma.comment.update({
+        where: {
+          id: Number(req.params.commentId),
+          authorId: req.user.id,
+          postId: Number(req.params.postId),
+        },
+        data: { message: req.body.commentMessage },
+      });
+
+      return res
+        .status(200)
+        .json({ data: { message: "Comment updated successfully" } });
+    } catch (error) {
+      // Check comment not exists error / incorrect user
+      if (error.code === "P2025") {
+        return res.status(404).json({
+          error: { code: "NOT_FOUND", message: "Resource not found." },
+        });
+      }
+      return next(error);
+    }
+  },
 };

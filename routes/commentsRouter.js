@@ -15,4 +15,12 @@ commentsRouter.post(
   commentsController.postComment,
 );
 
+// PUT
+commentsRouter.put(
+  "/:commentId",
+  requiredAuth,
+  commentsValidator.validateComment,
+  commentsController.putComment,
+);
+
 module.exports = commentsRouter;
