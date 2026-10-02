@@ -52,6 +52,7 @@ JWT_REFRESH_SECRET=>desired_secret>
 ### Setup the database
 
 ```bash
+npx prisma migrate dev
 npx prisma generate
 ```
 
