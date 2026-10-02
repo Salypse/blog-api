@@ -18,7 +18,7 @@ module.exports = {
   async getPublishedPost(req, res, next) {
     try {
       const post = await prisma.post.findUniqueOrThrow({
-        where: { id: Number(req.params.id), isPublished: true },
+        where: { id: Number(req.params.postId), isPublished: true },
       });
 
       return res.status(200).json({ data: { post } });
@@ -69,7 +69,7 @@ module.exports = {
       const user = req.user;
 
       await prisma.post.update({
-        where: { id: Number(req.params.id), authorId: user.id },
+        where: { id: Number(req.params.postId), authorId: user.id },
         data: {
           header: req.body.postHeader,
           subHeader: req.body.postSubHeader,
@@ -89,7 +89,7 @@ module.exports = {
   async deletePost(req, res, next) {
     try {
       await prisma.post.delete({
-        where: { id: Number(req.params.id) },
+        where: { id: Number(req.params.postId) },
       });
 
       return res.status(204).send();

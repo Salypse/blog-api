@@ -7,7 +7,7 @@ const postValidator = require("../validators/postValidator");
 
 // GET
 postsRouter.get("/", optionalAuth, postsController.getPublishedPosts);
-postsRouter.get("/:id", optionalAuth, postsController.getPublishedPost);
+postsRouter.get("/:postId", optionalAuth, postsController.getPublishedPost);
 
 // POST
 postsRouter.post(
@@ -20,7 +20,7 @@ postsRouter.post(
 
 // PUT
 postsRouter.put(
-  "/:id",
+  "/:postId",
   requiredAuth,
   isAdmin,
   postValidator.validatePost,
@@ -28,5 +28,10 @@ postsRouter.put(
 );
 
 // DELETE
-postsRouter.delete("/:id", requiredAuth, isAdmin, postsController.deletePost);
+postsRouter.delete(
+  "/:postId",
+  requiredAuth,
+  isAdmin,
+  postsController.deletePost,
+);
 module.exports = postsRouter;
