@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const routes = require("./routes/index");
 const CustomError = require("./middleware/errorHandler");
@@ -10,6 +11,7 @@ const CustomError = require("./middleware/errorHandler");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors);
 
 app.use("/", routes.indexRouter);
 app.use("/auth", routes.authRouter);
