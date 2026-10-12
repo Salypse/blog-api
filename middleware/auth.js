@@ -2,10 +2,11 @@ const passport = require("../config/passport");
 
 module.exports = {
   optionalAuth(req, res, next) {
-    const bearerHeader = req.headers.authorization;
+    const bearerHeader = req.headers.authorization || "";
+    const [scheme, token, ...extras] = bearerHeader.split(" ");
 
     // If bearer header validate token
-    if (bearerHeader) {
+    if (scheme === "Bearer" && token && extras.length <= 0) {
       passport.authenticate("jwt", { session: false }, (err, user, info) => {
         if (err) {
           return next(err);
@@ -40,30 +41,42 @@ module.exports = {
   },
 
   requiredAuth(req, res, next) {
-    passport.authenticate("jwt", { session: false }, (err, user, info) => {
-      if (err) {
-        return next(err);
-      }
+    const bearerHeader = req.headers.authorization || "";
+    const [scheme, token, ...extras] = bearerHeader.split(" ");
 
-      // If user has expired token return refresh status
-      if (info?.name === "TokenExpiredError") {
-        return res.status(401).json({
-          error: { code: "TOKEN_EXPIRED", message: "Token expired." },
-        });
-      }
+    if (scheme === "Bearer" && token && extras.length <= 0) {
+      passport.authenticate("jwt", { session: false }, (err, user, info) => {
+        if (err) {
+          return next(err);
+        }
 
-      if (!user) {
-        return res.status(401).json({
-          error: {
-            code: "UNAUTHORIZED",
-            message: "Unauthorized access.",
-          },
-        });
-      }
+        // If user has expired token return refresh status
+        if (info?.name === "TokenExpiredError") {
+          return res.status(401).json({
+            error: { code: "TOKEN_EXPIRED", message: "Token expired." },
+          });
+        }
 
-      req.user = user;
-      return next();
-    })(req, res, next);
+        if (!user) {
+          return res.status(401).json({
+            error: {
+              code: "UNAUTHORIZED",
+              message: "Unauthorized access.",
+            },
+          });
+        }
+
+        req.user = user;
+        return next();
+      })(req, res, next);
+    } else {
+      return res.status(401).json({
+        error: {
+          code: "UNAUTHORIZED",
+          message: "Unauthorized access.",
+        },
+      });
+    }
   },
 
   isAdmin(req, res, next) {

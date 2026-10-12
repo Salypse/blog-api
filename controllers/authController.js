@@ -31,7 +31,7 @@ module.exports = {
         path: "/auth/refresh",
       });
 
-      return res.json({
+      return res.status(200).json({
         data: {
           accessToken,
         },
@@ -96,6 +96,16 @@ module.exports = {
       );
 
       return res.json({ data: { accessToken } });
+    });
+  },
+
+  async getCurrentUser(req, res, next) {
+    const { password, ...cleanUser } = req.user;
+
+    return res.status(200).json({
+      data: {
+        user: cleanUser,
+      },
     });
   },
 };

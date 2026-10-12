@@ -2,8 +2,8 @@ const express = require("express");
 const authRouter = express.Router();
 const authController = require("../controllers/authController");
 const authValidator = require("../validators/authValidator");
-
 const passport = require("../config/passport");
+const { requiredAuth } = require("../middleware/auth");
 
 authRouter.post(
   "/login",
@@ -37,6 +37,8 @@ authRouter.post(
   authValidator.validateSignUp,
   authController.signUp,
 );
+
+authRouter.get("/me", requiredAuth, authController.getCurrentUser);
 
 authRouter.post("/refresh", authController.refreshToken);
 
