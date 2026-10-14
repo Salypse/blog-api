@@ -32,6 +32,8 @@ authRouter.post(
   authController.login,
 );
 
+authRouter.post("/logout", authController.logout);
+
 authRouter.post(
   "/sign-up",
   authValidator.validateSignUp,
