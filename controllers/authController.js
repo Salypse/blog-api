@@ -42,7 +42,6 @@ module.exports = {
   },
 
   async logout(req, res, next) {
-    console.log("logout attempt");
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: true,
