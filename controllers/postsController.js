@@ -7,6 +7,7 @@ module.exports = {
     try {
       const posts = await prisma.post.findMany({
         where: { isPublished: true },
+        include: { author: { select: { username: true } } },
       });
 
       return res.status(200).json({ data: { posts } });
@@ -77,9 +78,7 @@ module.exports = {
         },
       });
 
-      return res
-        .status(200)
-        .json({ data: { message: "Post updated successfully." } });
+      return res.status(200).json({ data: { message: "Post updated successfully." } });
     } catch (error) {
       return next(error);
     }
