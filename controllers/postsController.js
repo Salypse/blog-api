@@ -20,6 +20,7 @@ module.exports = {
     try {
       const post = await prisma.post.findUniqueOrThrow({
         where: { id: Number(req.params.postId), isPublished: true },
+        include: { author: { select: { username: true } }, comments: true },
       });
 
       return res.status(200).json({ data: { post } });
