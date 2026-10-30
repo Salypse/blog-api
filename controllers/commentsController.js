@@ -14,6 +14,7 @@ module.exports = {
 
       const comments = await prisma.comment.findMany({
         where: { postId: post.id },
+        include: { author: { select: { username: true } } },
       });
 
       return res.status(200).json({ data: { comments } });
@@ -75,9 +76,7 @@ module.exports = {
         data: { message: req.body.commentMessage },
       });
 
-      return res
-        .status(200)
-        .json({ data: { message: "Comment updated successfully" } });
+      return res.status(200).json({ data: { message: "Comment updated successfully" } });
     } catch (error) {
       return next(error);
     }
